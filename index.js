@@ -40,6 +40,16 @@ async function run() {
       const usersCollection = client
         .db("squirrel-manufacturer")
         .collection("users");
+      const serviceCollection = client
+        .db("squirrel-manufacturer")
+      .collection("services");
+    
+    app.get("/services", async (req, res) => {
+      const query = {};
+      const books = await serviceCollection.find(query).toArray();
+      res.send(books);
+    });
+    
     
 
       app.get("/user", verifyJWT, async (req, res) => {
