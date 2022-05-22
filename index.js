@@ -49,7 +49,12 @@ async function run() {
       const books = await serviceCollection.find(query).toArray();
       res.send(books);
     });
-    
+     app.get("/services/:id", async (req, res) => {
+       const service = await serviceCollection.findOne({
+         _id: new ObjectId(req.params.id),
+       });
+       res.send(service);
+     });
     
 
       app.get("/user", verifyJWT, async (req, res) => {
