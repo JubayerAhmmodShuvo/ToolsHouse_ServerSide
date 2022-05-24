@@ -43,6 +43,15 @@ async function run() {
       const serviceCollection = client
         .db("squirrel-manufacturer")
       .collection("services");
+      const orderCollection = client
+        .db("squirrel-manufacturer")
+      .collection("orders");
+
+    app.post("/order", async (req, res) => { 
+      const order = req.body;
+      const result = await orderCollection.insertOne(order);
+      res.send(result);
+    })
     
     app.get("/services", async (req, res) => {
       const query = {};
@@ -55,6 +64,7 @@ async function run() {
        });
        res.send(service);
      });
+   
     
 
       app.get("/user", verifyJWT, async (req, res) => {
