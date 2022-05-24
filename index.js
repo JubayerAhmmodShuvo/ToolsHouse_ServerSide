@@ -46,12 +46,23 @@ async function run() {
       const orderCollection = client
         .db("squirrel-manufacturer")
       .collection("orders");
+      const reviewCollection = client
+        .db("squirrel-manufacturer")
+      .collection("reviews");
 
     app.post("/order", async (req, res) => { 
       const order = req.body;
       const result = await orderCollection.insertOne(order);
       res.send(result);
     })
+      app.get("/order",  async (req, res) => {
+        const email = req.query.email;
+        
+        const result = await orderCollection.find({ email: email }).toArray();
+        
+        res.send(result);
+
+      });
     
     app.get("/services", async (req, res) => {
       const query = {};
@@ -89,6 +100,17 @@ async function run() {
         });
         res.send({ result, token: token });
       });
+
+     app.get("/review", async (req, res) => {
+       const review = await reviewCollection.find().toArray();
+       res.send(review);
+     });
+
+     app.post("/review",  async (req, res) => {
+       const review = req.body;
+       const result = await reviewCollection.insertOne(review);
+       res.send(result);
+     });
     
   }
   finally { }
