@@ -115,6 +115,11 @@ async function run() {
       const books = await serviceCollection.find(query).toArray();
       res.send(books);
     });
+    app.post("/services", async (req, res) => {
+      const service = req.body;
+      const result = await serviceCollection.insertOne(service);
+      res.send(result);
+    })
      app.get("/services/:id", async (req, res) => {
        const service = await serviceCollection.findOne({
          _id: new ObjectId(req.params.id),
@@ -124,7 +129,7 @@ async function run() {
    
     
 
-      app.get("/user", verifyJWT, async (req, res) => {
+      app.get("/user",  async (req, res) => {
         const users = await usersCollection.find().toArray();
         res.send(users);
       });
@@ -146,6 +151,16 @@ async function run() {
         });
         res.send({ result, token: token });
       });
+    
+     app.put("/user/admin/:email",  async (req, res) => {
+       const email = req.params.email;
+       const filter = { email: email };
+       const updateDoc = {
+         $set: { role: "admin" },
+       };
+       const result = await usersCollection.updateOne(filter, updateDoc);
+       res.send(result);
+     });
 
      app.get("/review", async (req, res) => {
        const review = await reviewCollection.find().toArray();
