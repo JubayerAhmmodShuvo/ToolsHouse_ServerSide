@@ -124,8 +124,8 @@ async function run() {
     
     app.get("/services", async (req, res) => {
       const query = {};
-      const books = await serviceCollection.find(query).toArray();
-      res.send(books);
+      const result = await serviceCollection.find(query).toArray();
+      res.send(result);
     });
     app.post("/services", async (req, res) => {
       const service = req.body;
@@ -138,6 +138,11 @@ async function run() {
        });
        res.send(service);
      });
+    app.delete("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await serviceCollection.deleteOne({ _id: new ObjectId(id) });
+      res.send(result);
+    })
    
     
 
