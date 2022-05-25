@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const app = express();
@@ -49,6 +50,9 @@ async function run() {
       const reviewCollection = client
         .db("squirrel-manufacturer")
       .collection("reviews");
+      const paymentCollection = client
+        .db("squirrel-manufacturer")
+        .collection("payment");
 
     app.post("/order", async (req, res) => { 
       const order = req.body;
@@ -69,6 +73,42 @@ async function run() {
       const result = await orderCollection.findOne({ _id: ObjectId(id) });
       res.send(result);
     })
+
+    app.patch("/order/:id", async (req, res) => { 
+ const id = req.params.id;
+ const payment = req.body;
+ const filter = { _id: ObjectId(id) };
+ const updatedDoc = {
+   $set: {
+     paid: true,
+     transactionId: payment.transactionId,
+   },
+ };
+    
+
+ const result = await paymentCollection.insertOne(payment);
+ const updateOrder = await orderCollection.updateOne(filter, updatedDoc);
+ res.send(updateOrder);
+
+     
+    })
+
+    app.delete("/order/:id",verifyJWT, async (req, res) => { 
+      const id = req.params.id;
+      const result = await orderCollection.deleteOne({ _id: ObjectId(id) });
+      res.send(result);
+    })
+       app.post("/create-payment-intent",  async (req, res) => {
+         const service = req.body;
+         const price = service.price;
+         const amount = price * 100;
+         const paymentIntent = await stripe.paymentIntents.create({
+           amount: amount,
+           currency: "usd",
+           payment_method_types: ["card"],
+         });
+         res.send({ clientSecret: paymentIntent.client_secret });
+       });
     
     app.get("/services", async (req, res) => {
       const query = {};
