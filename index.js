@@ -68,7 +68,7 @@ async function run() {
          res.status(403).send({ message: "forbidden" });
        }
      };
-    app.get("/userprofile/:email",verifyJWT, async (req, res) => {
+    app.get("/userprofile/:email", async (req, res) => {
       const email = req.params.email;
       const user = await profileCollection.findOne({ email: email });
       res.send(user);
