@@ -72,10 +72,10 @@ async function run() {
       const email = req.params.email;
       const user = await profileCollection.findOne({ email: email });
       res.send(user);
+    }
+     )
     
-     })
-    
-    app.put("/userprofile/:email",verifyJWT, async (req, res) => { 
+    app.put("/userprofile/:email", async (req, res) => { 
       const email = req.params.email;
       const body = req.body;
       const user = {
@@ -99,7 +99,7 @@ async function run() {
       res.send(result);
      
     });
-         app.put("/order/:id",verifyJWT,verifyAdmin,async (req, res) => {
+         app.put("/order/:id",async (req, res) => {
              const id = req.params.id;
          const filter = { _id: ObjectId(id) };
            const updateDoc = {
@@ -115,7 +115,7 @@ async function run() {
         res.send({ result});
          })
       
-    app.post("/order",verifyJWT, async (req, res) => { 
+    app.post("/order", async (req, res) => { 
       const order = req.body;
       const result = await orderCollection.insertOne(order);
       res.send(result);
@@ -138,7 +138,7 @@ async function run() {
       res.send(result);
     })
 
-    app.get("/order/:id",verifyJWT, async (req, res) => {
+    app.get("/order/:id", async (req, res) => {
       const id = req.params.id;
       const result = await orderCollection.findOne({ _id: ObjectId(id) });
       res.send(result);
@@ -203,7 +203,7 @@ async function run() {
     })
    
 
-      app.get("/user",  async (req, res) => {
+      app.get("/user",verifyJWT,  async (req, res) => {
         const users = await usersCollection.find().toArray();
         res.send(users);
       });
