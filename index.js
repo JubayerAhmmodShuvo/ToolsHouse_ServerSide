@@ -68,20 +68,32 @@ async function run() {
          res.status(403).send({ message: "forbidden" });
        }
      };
-
+    app.get("/userprofile/:email", async (req, res) => {
+      const email = req.params.email;
+      const user = await profileCollection.findOne({ email: email });
+      res.send(user);
+    
+     })
+    
     app.put("/userprofile/:email", async (req, res) => { 
       const email = req.params.email;
       const body = req.body;
-     /*  const user={
-        name=
-      }
- */
+      const user = {
+        name: body.name,
+        email: body.email,
+        number: body.number,
+        education: body.education,
+        city: body.city,
+        pofile:body.profile
+
+      };
+
       const filter = { email: email };
       const options = { upsert: true }
       const updatedDoc = {
-        $set: {
-          body: body,
-        }
+        $set: 
+         user,
+        
       };
       const result = await profileCollection.updateOne(filter, updatedDoc, options);
       res.send(result);
