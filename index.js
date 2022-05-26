@@ -50,6 +50,9 @@ async function run() {
       const reviewCollection = client
         .db("squirrel-manufacturer")
       .collection("reviews");
+      const profileCollection = client
+        .db("squirrel-manufacturer")
+        .collection("userprofile");
       const paymentCollection = client
         .db("squirrel-manufacturer")
         .collection("payment");
@@ -66,12 +69,46 @@ async function run() {
        }
      };
 
+    app.put("/userprofile/:email", async (req, res) => { 
+      const email = req.params.email;
+      const body = req.body;
+     /*  const user={
+        name=
+      }
+ */
+      const filter = { email: email };
+      const options = { upsert: true }
+      const updatedDoc = {
+        $set: {
+          body: body,
+        }
+      };
+      const result = await profileCollection.updateOne(filter, updatedDoc, options);
+      res.send(result);
+     
+    });
+         app.put("/order/:id",async (req, res) => {
+             const id = req.params.id;
+         const filter = { _id: ObjectId(id) };
+           const updateDoc = {
+             $set: {
+               status:true
+          },
+        };
+        const result = await orderCollection.updateOne(
+          filter,
+          updateDoc      
+        );
+
+        res.send({ result});
+         })
+      
     app.post("/order", async (req, res) => { 
       const order = req.body;
       const result = await orderCollection.insertOne(order);
       res.send(result);
     })
-      app.get("/order",  async (req, res) => {
+      app.get("/order",verifyJWT,  async (req, res) => {
         const email = req.query.email;
         
         const result = await orderCollection.find({ email: email }).toArray();
@@ -79,6 +116,15 @@ async function run() {
         res.send(result);
 
       });
+    app.get("/orders", async (req, res) => {
+      const result = await orderCollection.find({}).toArray();
+      res.send(result);
+    })
+    app.delete("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await orderCollection.deleteOne({ _id: ObjectId(id) });
+      res.send(result);
+    })
 
     app.get("/order/:id", async (req, res) => {
       const id = req.params.id;
@@ -86,7 +132,7 @@ async function run() {
       res.send(result);
     })
 
-    app.patch("/order/:id", async (req, res) => { 
+    app.patch("/order/:id",verifyJWT, async (req, res) => { 
  const id = req.params.id;
  const payment = req.body;
  const filter = { _id: ObjectId(id) };
@@ -144,9 +190,8 @@ async function run() {
       res.send(result);
     })
    
-    
 
-      app.get("/user",  async (req, res) => {
+      app.get("/user",verifyJWT,  async (req, res) => {
         const users = await usersCollection.find().toArray();
         res.send(users);
       });
