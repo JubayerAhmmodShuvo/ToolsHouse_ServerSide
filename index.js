@@ -168,7 +168,7 @@ async function run() {
       const result = await orderCollection.deleteOne({ _id: ObjectId(id) });
       res.send(result);
     })
-       app.post("/create-payment-intent",  async (req, res) => {
+       app.post("/create-payment-intent",verifyJWT,  async (req, res) => {
          const service = req.body;
          const price = service.price;
          const amount = price * 100;
@@ -196,7 +196,7 @@ async function run() {
        });
        res.send(service);
      });
-    app.delete("/services/:id", async (req, res) => {
+    app.delete("/services/:id",verifyJWT,verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const result = await serviceCollection.deleteOne({ _id: new ObjectId(id) });
       res.send(result);
@@ -248,7 +248,7 @@ async function run() {
        res.send(review);
      });
 
-     app.post("/review",  async (req, res) => {
+     app.post("/review",verifyJWT,  async (req, res) => {
        const review = req.body;
        const result = await reviewCollection.insertOne(review);
        res.send(result);
