@@ -248,7 +248,7 @@ async function run() {
        res.send(review);
      });
 
-     app.post("/review",  async (req, res) => {
+     app.post("/review",verifyJWT,  async (req, res) => {
        const review = req.body;
        const result = await reviewCollection.insertOne(review);
        res.send(result);
