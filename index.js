@@ -1,15 +1,15 @@
-const express = require("express");
-const cors = require("cors");
+import express, { json } from "express";
+import cors from "cors";
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
+import { verify, sign } from "jsonwebtoken";
 const stripe = require("stripe")(process.env.STRIPE_KEY);
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
 
 
@@ -26,7 +26,7 @@ function verifyJWT(req, res, next) {
     return res.status(401).send({ error: "Unauthorized Access" });
   }
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
+  verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
     if (err) {
       return res.status(403).send({ error: "Forbidden" });
     }
@@ -220,7 +220,7 @@ async function run() {
           updateDoc,
           options
         );
-        const token = jwt.sign({ email: emial }, process.env.ACCESS_TOKEN, {
+        const token = sign({ email: emial }, process.env.ACCESS_TOKEN, {
           expiresIn: "1h",
         });
         res.send({ result, token: token });
