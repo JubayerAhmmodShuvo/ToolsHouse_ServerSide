@@ -1,12 +1,13 @@
 {
-  "name": "tools-manufacturer-server",
+  "name": "toolsmanufacturerserver",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "start-dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +19,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.6.0",
     "stripe": "^9.4.0"
+  },
+  "engines": {
+    "node": ">=14.20.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
   }
 }
