@@ -288,7 +288,14 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://tools-manufacturer-4bdef.web.app", 
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, 
+  optionsSuccessStatus: 204, 
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xt1bf.mongodb.net/?retryWrites=true&w=majority`;
