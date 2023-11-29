@@ -20,9 +20,7 @@
     "mongodb": "^4.6.0",
     "stripe": "^9.4.0"
   },
-  "engines": {
-    "node": ">=14.20.1"
-  },
+ 
   "devDependencies": {
     "webpack-cli": "^5.1.4"
   }

@@ -316,10 +316,6 @@ function verifyJWT(req, res, next) {
       return res.status(403).send({ error: "Forbidden" });
     }
     req.decoded = decoded;
-    res.setHeader(
-       "Access-Control-Allow-Origin",
-       "https://tools-manufacturer-4bdef.web.app/"
-     );
     next();
   });
 }
